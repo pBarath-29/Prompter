@@ -1,0 +1,8 @@
+{
+  "name": "Prompter",
+  "description": "An application to help users generate, discover, and share AI prompts, with features like AI-powered generation, community contributions, and a marketplace for prompt collections.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ]
+}
