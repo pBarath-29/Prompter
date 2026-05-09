@@ -54,7 +54,6 @@ Built as a complete product with auth, freemium monetisation, admin moderation, 
 
 - Node.js 18+
 - A [Firebase](https://firebase.google.com) project with Authentication and Realtime Database enabled
-- A [Google AI Studio](https://aistudio.google.com/app/apikey) API key (Gemini)
 
 ### Local setup
 
