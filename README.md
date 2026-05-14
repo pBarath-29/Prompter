@@ -10,7 +10,7 @@ Live at: https://promptgenie-app.vercel.app
 
 The core feature is AI-powered prompt generation using Gemini 2.5 Flash. You type what you want to accomplish, the system generates a properly structured prompt with a role, constraints, and output format built in. After generation, you can refine the result with one-click options like "Make it more specific" or "Add step-by-step format" without starting over.
 
-Beyond generation, users can submit their prompts to a public community feed where others can upvote, downvote, and comment. The marketplace lets creators package prompts into collections and sell them. Admins moderate everything through a dedicated panel, and users receive in-app notifications when their submissions are approved or rejected.
+Beyond generation, users can submit their prompts to a public community feed where others can upvote, downvote, and comment. The marketplace lets creators package prompts into collections and sell them. Admins moderate everything through a dedicated panel.
 
 ---
 
@@ -37,10 +37,8 @@ Beyond generation, users can submit their prompts to a public community feed whe
 - Password strength validation and change
 - Account deletion with data anonymisation
 
-**Notifications and Feedback**
+**Feedback**
 
-- In-app notification bell with real-time unread count
-- Notifications for prompt/collection approval and rejection
 - Toast notifications for user actions
 
 **Admin**
@@ -48,7 +46,6 @@ Beyond generation, users can submit their prompts to a public community feed whe
 - Full moderation queue for prompts and collections
 - User management with ban/unban
 - Promo code creation and management
-- Audit trail via notifications to users
 
 **Product**
 
@@ -86,7 +83,6 @@ src/
     AuthContext         User auth, subscription tier, generation limits
     PromptContext       Prompts CRUD, voting, comments
     CollectionContext   Collections CRUD
-    NotificationContext In-app notifications, real-time bell
     HistoryContext      Per-user generation history
     ToastContext        Global toast notifications
     ThemeContext        Light and dark mode
@@ -118,7 +114,7 @@ Firebase Security Rules are defined in `database.rules.json`. Users can only rea
 ### Setup
 
 ```bash
-git clone https://github.com/your-username/prompter.git
+git clone https://github.com/pBarath-29/Prompter.git
 cd prompter
 
 npm install
