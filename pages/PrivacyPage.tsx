@@ -1,9 +1,11 @@
 import React from 'react';
 
-const LegalSection: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
-  <div className="mb-8">
-    <h2 className="text-2xl font-bold mb-3 text-gray-800 dark:text-gray-200">{title}</h2>
-    <div className="space-y-4 text-gray-600 dark:text-gray-400 prose dark:prose-invert max-w-none">
+const Section: React.FC<{ number: string; title: string; children: React.ReactNode }> = ({ number, title, children }) => (
+  <div className="mb-10">
+    <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+      {number}. {title}
+    </h2>
+    <div className="space-y-4 text-gray-600 dark:text-gray-400 leading-relaxed">
       {children}
     </div>
   </div>
@@ -11,108 +13,122 @@ const LegalSection: React.FC<{ title: string; children: React.ReactNode }> = ({ 
 
 const PrivacyPage: React.FC = () => {
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 bg-white dark:bg-gray-800 rounded-lg shadow-md animate-fade-in">
-      <h1 className="text-4xl font-extrabold text-center mb-8 text-gray-900 dark:text-white">Privacy Policy</h1>
-      <p className="mb-8 text-sm text-center text-gray-500 dark:text-gray-400">Last updated: {new Date().toLocaleDateString()}</p>
-      
-      <LegalSection title="1. Introduction">
-        <p>
-          Prompter ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website and services (collectively, the "Service"). By using the Service, you agree to the collection and use of information in accordance with this policy.
-        </p>
-      </LegalSection>
+    <div className="max-w-3xl mx-auto py-8 px-4 animate-fade-in">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 sm:p-12">
+        <h1 className="text-3xl font-extrabold text-center mb-2 text-gray-900 dark:text-white">Privacy Policy</h1>
+        <p className="text-sm text-center text-gray-400 mb-10">Last updated: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
 
-      <LegalSection title="2. Information We Collect">
-        <p>We collect several types of information for various purposes to provide and improve our Service to you.</p>
-        <div>
-            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Information You Provide to Us</h3>
-            <ul>
-                <li><strong>Account Information:</strong> When you register for an account, we collect your name, email address, and a hashed version of your password. You may also voluntarily provide additional profile information, such as a biography, an avatar image, and a theme preference (light/dark).</li>
-                <li><strong>User-Generated Content:</strong> We collect all content you create and submit to the Service, including prompts, prompt collections, descriptions, tags, comments, and feedback messages.</li>
-                <li><strong>Payment Information:</strong> When you subscribe to our Pro plan or purchase a collection from the marketplace, our third-party payment processor (e.g., Stripe) will collect your payment information. We do not directly store sensitive payment details such as your full credit card number. We only receive a token or confirmation of payment.</li>
-                <li><strong>Communications:</strong> If you contact us directly, such as through our feedback page, we will collect your name, email address, and the contents of your message.</li>
-            </ul>
-        </div>
-        <div>
-            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Information We Collect Automatically</h3>
-             <ul>
-                <li><strong>Browser Storage:</strong> We use your browser's local storage to enhance your experience. For example, if you are not logged in, we save your theme preference (light/dark mode) in local storage so the site remembers your choice on your next visit. Our authentication provider (Firebase) may also use browser storage mechanisms like IndexedDB to securely manage your login session. This is essential for keeping you logged in. You can clear your browser's storage, but this may log you out or reset your preferences.</li>
-            </ul>
-        </div>
-      </LegalSection>
+        <Section number="1" title="Introduction">
+          <p>
+            Prompter is committed to protecting your privacy. This Privacy Policy explains what information we collect, how we use it, who we share it with, and what rights you have over it. By using the service, you agree to the practices described here.
+          </p>
+        </Section>
 
-      <LegalSection title="3. How We Use Your Information">
-        <p>We use the information we collect for various purposes, including to:</p>
-        <ul>
-            <li>Provide, operate, secure, and maintain our Service.</li>
-            <li>Manage your account, including processing your subscriptions, purchases, and payments.</li>
-            <li>Display your public profile and User-Generated Content to other users as part of our community and marketplace features.</li>
-            <li>Personalize your experience, for instance, by remembering your theme preference.</li>
-            <li>Communicate with you, including sending important account-related emails (like email verification and password resets) and responding to your feedback or inquiries.</li>
-            <li>Track your prompt generation and submission counts to enforce the limits of your subscription tier.</li>
-            <li>Prevent fraud, enforce our Terms and Conditions, and comply with legal obligations.</li>
-        </ul>
-      </LegalSection>
+        <Section number="2" title="Information We Collect">
+          <p>
+            <strong className="text-gray-800 dark:text-gray-200">Account information.</strong> When you register, we collect your name and email address. If you sign up via Google OAuth, we receive the name, email, and profile photo associated with your Google account. You may also provide optional profile information such as a biography and avatar image.
+          </p>
+          <p>
+            <strong className="text-gray-800 dark:text-gray-200">Content you create.</strong> We store all prompts, collections, comments, and feedback you submit to the service.
+          </p>
+          <p>
+            <strong className="text-gray-800 dark:text-gray-200">Usage data.</strong> We track your prompt generation count and submission counts per billing period to enforce your subscription tier limits. We also store your generation history so you can reference past results.
+          </p>
+          <p>
+            <strong className="text-gray-800 dark:text-gray-200">Payment information.</strong> When you subscribe to Pro or purchase a collection, payment is handled entirely by our third-party payment processor. We do not store your card details. We only receive a confirmation of payment and a customer reference.
+          </p>
+          <p>
+            <strong className="text-gray-800 dark:text-gray-200">Preferences.</strong> Your theme preference (light or dark mode) is stored in your account and in your browser's local storage so it persists across sessions.
+          </p>
+        </Section>
 
-      <LegalSection title="4. How We Share Your Information">
-        <p>We do not sell your personal information. We may share your information in the following limited circumstances:</p>
-        <ul>
-            <li><strong>With Other Users:</strong> Your public profile information (name, avatar, bio) and any content you submit publicly (approved prompts, collections, comments) are visible to other users of the Service.</li>
-            <li><strong>With Third-Party Service Providers:</strong> We share information with third-party vendors who help us operate our Service. These include:
-                <ul>
-                  <li><strong>Firebase (Google):</strong> For database hosting, user authentication, and analytics.</li>
-                  <li><strong>Google Gemini API:</strong> When you use our prompt generator, we send the necessary inputs (your description, chosen tone, and category) to the Gemini API to generate the prompt. We do not send any of your personal identifying information (like your name or email) with these API requests; only the content required to generate the prompt is sent.</li>
-                  <li><strong>Payment Processors (e.g., Stripe):</strong> To securely handle payments for subscriptions and marketplace purchases.</li>
-                </ul>
-                These providers only have access to the information necessary to perform their functions and are contractually obligated to protect it.
-            </li>
-            <li><strong>For Legal Reasons:</strong> We may disclose your information if required by law or in response to valid requests by public authorities (e.g., a court or a government agency).</li>
-            <li><strong>Business Transfers:</strong> In the event of a merger, acquisition, or asset sale, your information may be transferred.</li>
-        </ul>
-      </LegalSection>
+        <Section number="3" title="How We Use Your Information">
+          <p>We use the information we collect to:</p>
+          <ul className="list-disc pl-5 space-y-2 mt-2">
+            <li>Create and manage your account and authenticate your identity.</li>
+            <li>Provide the prompt generation service, including sending your input to the Gemini API to produce a result.</li>
+            <li>Display your public profile and any content you have shared in the community or marketplace.</li>
+            <li>Process subscription payments and marketplace purchases.</li>
+            <li>Send account-related emails, including email verification and password reset links.</li>
+            <li>Enforce subscription tier limits and detect abuse.</li>
+            <li>Investigate reports, moderate content, and enforce our Terms and Conditions.</li>
+          </ul>
+        </Section>
 
-      <LegalSection title="5. Data Security and Retention">
-        <p>
-          We take reasonable measures to protect your information from loss, theft, misuse, and unauthorized access. We rely on the security infrastructure of our service providers, like Firebase, to safeguard your data. However, no electronic transmission or storage is 100% secure.
-        </p>
-        <p>
-          We retain your personal information as long as your account is active. If you choose to delete your account, we will delete your personally identifiable information (such as name and email). Your User-Generated Content (prompts, collections, etc.) will be anonymized by attributing it to a "Deleted User" to maintain the integrity of community interactions.
-        </p>
-      </LegalSection>
+        <Section number="4" title="How We Share Your Information">
+          <p>We do not sell your personal data. We share information only in the following circumstances:</p>
+          <p>
+            <strong className="text-gray-800 dark:text-gray-200">With other users.</strong> Your name, avatar, and bio are visible on your public profile. Any prompts, collections, and comments you publish are visible to other users.
+          </p>
+          <p>
+            <strong className="text-gray-800 dark:text-gray-200">With service providers.</strong>
+          </p>
+          <ul className="list-disc pl-5 space-y-2">
+            <li><strong className="text-gray-700 dark:text-gray-300">Firebase (Google).</strong> We use Firebase for user authentication and database storage. Your account data and content are stored in Firebase Realtime Database.</li>
+            <li><strong className="text-gray-700 dark:text-gray-300">Google Gemini API.</strong> When you generate a prompt, we send your description, selected tone, and category to the Gemini API. We do not send your name, email, or any other personally identifying information with these requests.</li>
+            <li><strong className="text-gray-700 dark:text-gray-300">Payment processors.</strong> We use third-party processors to handle subscription and marketplace payments securely.</li>
+          </ul>
+          <p>
+            <strong className="text-gray-800 dark:text-gray-200">For legal reasons.</strong> We may disclose your information if required by law or in response to a valid legal request from a public authority.
+          </p>
+          <p>
+            <strong className="text-gray-800 dark:text-gray-200">Business transfers.</strong> If Prompter is acquired or merges with another company, your information may be transferred as part of that transaction. We will notify you before that happens.
+          </p>
+        </Section>
 
-      <LegalSection title="6. Your Data Protection Rights">
-        <p>
-          You have rights over your personal information. Through your account's profile page, you have the ability to:
-        </p>
-        <ul>
-            <li><strong>Access and Update:</strong> You can view and edit your profile information, such as your name, bio, and avatar at any time.</li>
-            <li><strong>Delete:</strong> You have the right to delete your account, which will remove your personal data and anonymize your content as described above.</li>
-        </ul>
-        <p>If you have any requests regarding your data that you cannot perform through your profile, please contact us.</p>
-      </LegalSection>
-      
-      <LegalSection title="7. Children's Privacy">
-        <p>
-          Our Service is not directed to individuals under the age of 14. We do not knowingly collect personally identifiable information from children under 14. If you are a parent or guardian and you are aware that your child has provided us with personal data, please contact us.
-        </p>
-      </LegalSection>
+        <Section number="5" title="Data Retention and Security">
+          <p>
+            We retain your personal information for as long as your account is active. If you delete your account, we remove your personal details (name, email) from our systems. Your public content (prompts, comments, collections) is anonymised and attributed to a "Deleted User" rather than deleted, to maintain the integrity of community history.
+          </p>
+          <p>
+            We rely on the security infrastructure provided by Firebase and our other service providers to protect your data. While we take reasonable steps to safeguard your information, no system is completely secure and we cannot guarantee absolute security.
+          </p>
+        </Section>
 
-      <LegalSection title="8. Governing Law">
-        <p>
-          This Privacy Policy shall be governed by and construed in accordance with the laws of Singapore.
-        </p>
-      </LegalSection>
+        <Section number="6" title="Your Rights">
+          <p>Through your account settings, you can:</p>
+          <ul className="list-disc pl-5 space-y-2 mt-2">
+            <li>View and edit your profile information at any time.</li>
+            <li>Change your password through the profile settings page.</li>
+            <li>Delete your account, which removes your personal data as described above.</li>
+          </ul>
+          <p>
+            For any data requests that cannot be handled through the profile settings, contact us at the address below.
+          </p>
+        </Section>
 
-      <LegalSection title="9. Changes to This Privacy Policy">
-        <p>
-          We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date. We may also notify you via email if the changes are material.
-        </p>
-      </LegalSection>
+        <Section number="7" title="Cookies and Local Storage">
+          <p>
+            We do not use advertising or tracking cookies. Firebase, our authentication provider, uses browser storage mechanisms (including IndexedDB and local storage) to manage your login session securely. Clearing your browser storage will log you out of the service. We also store your theme preference in local storage so it is remembered between visits.
+          </p>
+        </Section>
 
-      <LegalSection title="10. Contact Us">
-        <p>
-          If you have any questions about this Privacy Policy, you can use the "Feedback" link in the footer of our website. For privacy-related concerns, you can also contact us directly at <a href="mailto:pbarath29@gmail.com" className="text-primary-500 hover:underline">pbarath29@gmail.com</a>.
-        </p>
-      </LegalSection>
+        <Section number="8" title="Children's Privacy">
+          <p>
+            The service is not directed at children under the age of 14. We do not knowingly collect personal information from children under 14. If you believe a child has provided us with their information, please contact us and we will delete it.
+          </p>
+        </Section>
+
+        <Section number="9" title="Governing Law">
+          <p>
+            This Privacy Policy is governed by the laws of the Republic of Singapore.
+          </p>
+        </Section>
+
+        <Section number="10" title="Changes to This Policy">
+          <p>
+            We may update this Privacy Policy from time to time. We will post the revised policy on this page with an updated date. For material changes, we will also notify you by email where possible.
+          </p>
+        </Section>
+
+        <Section number="11" title="Contact">
+          <p>
+            For questions or concerns about this Privacy Policy, contact us at{' '}
+            <a href="mailto:pbarath29@gmail.com" className="text-primary-500 hover:underline">pbarath29@gmail.com</a>{' '}
+            or use the Feedback link in the footer.
+          </p>
+        </Section>
+      </div>
     </div>
   );
 };

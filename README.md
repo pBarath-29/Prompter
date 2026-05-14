@@ -1,84 +1,79 @@
-# ⚡ Prompter — AI Prompt Generator
+# Prompter
 
-> Generate, discover, and share high-quality AI prompts instantly.
+A full-stack SaaS platform for generating, discovering, and sharing AI prompts. Users describe their goal in plain English, pick a tone and category, and get a structured, ready-to-use prompt in seconds. Built with a community feed, a prompt marketplace, and a freemium subscription model.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-promptgenie--app.vercel.app-10b981?style=flat&logo=vercel)](https://promptgenie-app.vercel.app)
-[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org)
-[![Firebase](https://img.shields.io/badge/Firebase-Realtime%20DB-FFCA28?style=flat&logo=firebase)](https://firebase.google.com)
-[![Gemini](https://img.shields.io/badge/Gemini-2.5%20Flash-4285F4?style=flat&logo=google)](https://ai.google.dev)
+Live at: https://promptgenie-app.vercel.app
 
 ---
 
-## Overview
+## What it does
 
-Prompter is a full-stack SaaS platform that helps users craft high-quality AI prompts. Describe your goal in plain English, pick a tone and category, and the AI generates a structured, optimised prompt you can paste directly into any LLM (ChatGPT, Claude, Gemini). Users can also browse and contribute to a community library of prompts and purchase curated prompt collections from the marketplace.
+The core feature is AI-powered prompt generation using Gemini 2.5 Flash. You type what you want to accomplish, the system generates a properly structured prompt with a role, constraints, and output format built in. After generation, you can refine the result with one-click options like "Make it more specific" or "Add step-by-step format" without starting over.
 
-Built as a complete product with auth, freemium monetisation, admin moderation, and a community ecosystem — not just a demo.
+Beyond generation, users can submit their prompts to a public community feed where others can upvote, downvote, and comment. The marketplace lets creators package prompts into collections and sell them. Admins moderate everything through a dedicated panel, and users receive in-app notifications when their submissions are approved or rejected.
 
 ---
 
 ## Features
 
-- **AI Prompt Generation** — Gemini 2.5 Flash generates structured prompts with a role, constraints, and output format built in
-- **Prompt Refinement** — Iteratively improve generated prompts with one-click refinement suggestions
-- **Voice Input** — Web Speech API for hands-free prompt requests
-- **Community Feed** — Browse, upvote, and comment on approved community prompts
-- **Prompt Marketplace** — Purchase curated collections from creators
-- **Freemium Model** — 5 free generations/month; Pro tier unlocks unlimited
-- **Admin Panel** — Full moderation workflow (approve/reject prompts and collections, manage users, promo codes)
-- **User Profiles** — Public creator profiles with prompt galleries
-- **Dark Mode** — Full light/dark theme with persistence
-- **Responsive** — Works on all screen sizes
+**Core**
+
+- AI prompt generation with Gemini 2.5 Flash, with tone and category selection
+- One-click prompt refinement after generation
+- Voice input via the Web Speech API
+- Generation history per user
+
+**Community and Marketplace**
+
+- Community feed with voting, comments, and filtering by category and model
+- Prompt marketplace with curated collections
+- Creator profiles with public prompt galleries
+- Promo code system for discounts
+
+**Auth and Accounts**
+
+- Email and password signup with email verification
+- Google OAuth sign-in
+- Password strength validation and change
+- Account deletion with data anonymisation
+
+**Notifications and Feedback**
+
+- In-app notification bell with real-time unread count
+- Notifications for prompt/collection approval and rejection
+- Toast notifications for user actions
+
+**Admin**
+
+- Full moderation queue for prompts and collections
+- User management with ban/unban
+- Promo code creation and management
+- Audit trail via notifications to users
+
+**Product**
+
+- Freemium model: 5 free generations per month, 3 community submissions per day
+- Pro tier with unlimited generations and higher submission limits
+- Multi-step onboarding modal for new users
+- Dark mode with persistence
+- Responsive layout
 
 ---
 
-## Tech Stack
+## Tech stack
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 19 + TypeScript + Vite |
-| Routing | React Router v7 (hash-based, static-host friendly) |
-| Auth & DB | Firebase Authentication + Realtime Database |
-| AI | Google Gemini 2.5 Flash (text) + Imagen 4.0 (images) |
-| Styling | Tailwind CSS |
-| Icons | Lucide React |
-| Charts | Recharts |
-| Deploy | Vercel |
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- A [Firebase](https://firebase.google.com) project with Authentication and Realtime Database enabled
-
-### Local setup
-
-```bash
-# 1. Clone the repo
-git clone https://github.com/your-username/prompter.git
-cd prompter
-
-# 2. Install dependencies
-npm install
-
-# 3. Configure environment
-cp .env.example .env.local
-# Open .env.local and fill in your Firebase + Gemini credentials
-
-# 4. Start dev server
-npm run dev
-# → http://localhost:3000
-```
-
-### Environment variables
-
-See [`.env.example`](.env.example) for all required variables.
-
-To set the admin account, set `ADMIN_EMAIL` to the email you'll sign up with — that account will automatically receive the Pro tier and admin panel access on first signup.
+| Layer             | Technology                                          |
+| ----------------- | --------------------------------------------------- |
+| Frontend          | React 19, TypeScript, Vite                          |
+| Routing           | React Router v7 (hash-based for static hosting)     |
+| Auth and database | Firebase Authentication, Firebase Realtime Database |
+| AI                | Google Gemini 2.5 Flash (text), Imagen 4.0 (images) |
+| Styling           | Tailwind CSS                                        |
+| Icons             | Lucide React                                        |
+| Charts            | Recharts                                            |
+| Testing           | Vitest                                              |
+| CI                | GitHub Actions                                      |
+| Hosting           | Vercel                                              |
 
 ---
 
@@ -86,57 +81,110 @@ To set the admin account, set `ADMIN_EMAIL` to the email you'll sign up with —
 
 ```
 src/
-├── components/       # Reusable UI components (Button, Modal, Cards, etc.)
-├── contexts/         # React Context providers for global state
-│   ├── AuthContext       — user auth, subscription tier, generation limits
-│   ├── PromptContext     — prompts CRUD + voting
-│   ├── CollectionContext — collections CRUD
-│   ├── HistoryContext    — per-user generation history
-│   ├── ToastContext      — global toast notifications
-│   └── ThemeContext      — light/dark mode
-├── pages/            # Route-level page components
-├── services/
-│   ├── geminiService.ts  — Gemini API calls (generate, validate, refine, image)
-│   ├── firebase.ts       — Firebase app init (reads from env vars)
-│   └── firebaseService.ts — Generic CRUD helpers (getData, setData, etc.)
-├── hooks/            # Custom React hooks (useSpeechRecognition)
-└── utils/            # Pure utility functions (testable, no React deps)
+  components/       Reusable UI components
+  contexts/         React Context providers for global state
+    AuthContext         User auth, subscription tier, generation limits
+    PromptContext       Prompts CRUD, voting, comments
+    CollectionContext   Collections CRUD
+    NotificationContext In-app notifications, real-time bell
+    HistoryContext      Per-user generation history
+    ToastContext        Global toast notifications
+    ThemeContext        Light and dark mode
+  pages/            Route-level page components (lazy loaded)
+  services/
+    geminiService.ts    Gemini API: generate, validate, refine, example output
+    firebase.ts         Firebase app initialisation from env vars
+    firebaseService.ts  Generic CRUD helpers: getData, setData, updateData, etc.
+  hooks/            useSpeechRecognition
+  utils/
+    dateUtils.ts        Pure date helpers used across contexts and tests
+  __tests__/        Unit tests
 ```
 
-State is managed entirely through React Context + Firebase Realtime Database. All writes are optimistic with rollback on error. No Redux needed at this scale.
+State lives in React Context backed by Firebase Realtime Database. All writes are optimistic with rollback on failure. Pages are lazy-loaded with React.lazy to keep the initial bundle small.
+
+Firebase Security Rules are defined in `database.rules.json`. Users can only read and write their own data. Prompts and collections are readable by all authenticated users but writable only by their author or an admin.
+
+---
+
+## Getting started
+
+### Requirements
+
+- Node.js 18 or higher
+- A Firebase project with Authentication and Realtime Database enabled
+- A Gemini API key from https://aistudio.google.com/app/apikey
+
+### Setup
+
+```bash
+git clone https://github.com/your-username/prompter.git
+cd prompter
+
+npm install
+
+cp .env.example .env.local
+# Fill in your keys in .env.local
+
+npm run dev
+# Runs on http://localhost:3000
+```
+
+### Environment variables
+
+See `.env.example` for the full list. The required variables are:
+
+- `GEMINI_API_KEY` - your Gemini API key
+- `ADMIN_EMAIL` - the email that gets admin access and Pro tier on first signup
+- Firebase config variables from your project settings
+
+All variables starting with `VITE_` are bundled into the client. Everything else stays server-side only.
 
 ---
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start local dev server on port 3000 |
-| `npm run build` | Production build to `dist/` |
-| `npm run preview` | Preview production build locally |
-| `npm test` | Run unit tests with Vitest |
+| Command              | What it does                            |
+| -------------------- | --------------------------------------- |
+| `npm run dev`        | Start the local dev server on port 3000 |
+| `npm run build`      | Production build to dist/               |
+| `npm run preview`    | Preview the production build locally    |
+| `npm test`           | Run unit tests with Vitest              |
+| `npm run test:watch` | Run tests in watch mode                 |
+
+---
+
+## Testing
+
+Tests are in `__tests__/` and cover the pure utility functions in `utils/dateUtils.ts`, including the month calculation logic and day reset checks.
+
+```bash
+npm test
+```
+
+The CI pipeline runs `npm test` and `npm run build` on every push to main and on every pull request.
 
 ---
 
 ## Deployment
 
-The app is deployed on Vercel. Any push to `main` triggers a new production deployment automatically.
+The project deploys to Vercel. To deploy manually:
 
-Environment variables are set in the Vercel dashboard under **Project Settings → Environment Variables**. They mirror the keys in `.env.example`.
+```bash
+vercel --prod
+```
+
+Environment variables need to be set in the Vercel dashboard under Project Settings. They match the keys in `.env.example`.
+
+To activate Firebase Security Rules, copy the contents of `database.rules.json` into Firebase Console under Realtime Database, then click Publish.
+
+To enable Google OAuth, go to Firebase Console, then Authentication, then Sign-in providers, and enable Google.
 
 ---
 
 ## Roadmap
 
-- [ ] Real Stripe payment integration (webhooks + backend)
-- [ ] Email notifications (prompt approval, new comments)
-- [ ] Google / GitHub OAuth
-- [ ] Creator analytics dashboard (views, purchases, revenue)
-- [ ] Public API for third-party integrations
-- [ ] Prompt version history and diffing
-
----
-
-## License
-
-MIT
+- Real Stripe payment integration with webhook verification
+- Email notifications on prompt approval and rejection (requires Firebase Blaze plan and Cloud Functions)
+- Creator analytics dashboard showing views, saves, and purchases
+- Public API for third-party integrations

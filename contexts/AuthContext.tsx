@@ -4,10 +4,10 @@ import { getCurrentMonthYear } from '../utils/dateUtils';
 import { FREE_TIER_LIMIT, FREE_TIER_POST_LIMIT, PRO_TIER_POST_LIMIT } from '../config';
 import { getData, setData, updateData, deleteData } from '../services/firebaseService';
 import { auth, db } from '../services/firebase';
-import { 
-  onAuthStateChanged, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
+import {
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   signOut,
   sendEmailVerification,
   User as FirebaseUser,
@@ -15,6 +15,8 @@ import {
   reauthenticateWithCredential,
   EmailAuthProvider,
   deleteUser,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth';
 import { ref, onValue, Unsubscribe } from 'firebase/database';
 
@@ -23,6 +25,7 @@ interface AuthContextType {
   user: AppUser | null;
   loading: boolean;
   login: (email: string, password?: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
   signup: (name: string, email: string, password?: string) => Promise<void>;
   logout: () => void;
   resendVerificationEmail: (user: FirebaseUser) => Promise<void>;
@@ -174,7 +177,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         throw error;
       }
       
-      // The onAuthStateChanged listener will handle setting the user state.
   }, []);
 
   const signup = useCallback(async (name: string, email: string, password?: string): Promise<void> => {
@@ -217,6 +219,39 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       await setData(`users/${firebaseUser.uid}`, newUser);
       await signOut(auth); // Force user to login after verifying email
+  }, []);
+
+  const loginWithGoogle = useCallback(async (): Promise<void> => {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    const firebaseUser = result.user;
+
+    const existing = await getData<AppUser>(`users/${firebaseUser.uid}`);
+    if (!existing) {
+      const isAdminByEmail = (firebaseUser.email || '').toLowerCase() === (process.env.ADMIN_EMAIL || '').toLowerCase();
+      const newUser: AppUser = {
+        id: firebaseUser.uid,
+        name: firebaseUser.displayName || 'User',
+        email: firebaseUser.email || '',
+        avatar: firebaseUser.photoURL || `https://www.gravatar.com/avatar/?d=mp`,
+        bio: "Hey there! I'm using Prompter.",
+        submittedPrompts: [],
+        purchasedCollections: [],
+        savedPrompts: [],
+        createdCollections: [],
+        subscriptionTier: isAdminByEmail ? 'pro' : 'free',
+        role: isAdminByEmail ? 'admin' : 'user',
+        status: 'active',
+        promptGenerations: isAdminByEmail ? 999 : 0,
+        lastGenerationReset: getCurrentMonthYear(),
+        promptsSubmittedToday: 0,
+        lastSubmissionDate: new Date().toISOString().split('T')[0],
+        hasCompletedTutorial: false,
+        votes: {},
+        themePreference: 'light',
+      };
+      await setData(`users/${firebaseUser.uid}`, newUser);
+    }
   }, []);
 
   const logout = useCallback(async () => {
@@ -452,6 +487,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     user,
     loading,
     login,
+    loginWithGoogle,
     signup,
     logout,
     resendVerificationEmail,
@@ -479,6 +515,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     user,
     loading,
     login,
+    loginWithGoogle,
     signup,
     logout,
     resendVerificationEmail,

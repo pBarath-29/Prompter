@@ -1,6 +1,8 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useRef } from 'react';
 import { Prompt, Comment, User } from '../types';
 import { getData, getRecentData, setData, updateData, deleteData, performMultiPathUpdate } from '../services/firebaseService';
+import { auth } from '../services/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 interface PromptContextType {
   prompts: Prompt[];
@@ -20,22 +22,40 @@ const PromptContext = createContext<PromptContextType | undefined>(undefined);
 export const PromptProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [promptsLoading, setPromptsLoading] = useState(true);
+  const hasLoaded = useRef(false);
 
   useEffect(() => {
     const loadPrompts = async () => {
-        setPromptsLoading(true);
-        try {
-            const promptsData = await getData<{ [key: string]: Prompt }>('prompts');
-            const promptsArray = promptsData ? Object.values(promptsData).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) : [];
-            setPrompts(promptsArray);
-        } catch (error) {
-            console.error("Failed to load prompts:", error);
-            setPrompts([]);
-        } finally {
-            setPromptsLoading(false);
-        }
-    }
-    loadPrompts();
+      setPromptsLoading(true);
+      try {
+        const promptsData = await getData<{ [key: string]: Prompt }>('prompts');
+        const promptsArray = promptsData
+          ? Object.values(promptsData).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          : [];
+        setPrompts(promptsArray);
+      } catch (error) {
+        console.error("Failed to load prompts:", error);
+        setPrompts([]);
+      } finally {
+        setPromptsLoading(false);
+      }
+    };
+
+    // Wait for Firebase auth to be confirmed before fetching.
+    // Without this, the fetch fires before auth is restored on a new device,
+    // the security rules reject it (auth == null), and the list stays empty.
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser && !hasLoaded.current) {
+        hasLoaded.current = true;
+        loadPrompts();
+      } else if (!firebaseUser) {
+        hasLoaded.current = false;
+        setPrompts([]);
+        setPromptsLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const addPrompt = (prompt: Prompt) => {

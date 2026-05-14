@@ -1,6 +1,8 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useRef } from 'react';
 import { Collection, User } from '../types';
 import { getData, getRecentData, setData, updateData, deleteData, performMultiPathUpdate } from '../services/firebaseService';
+import { auth } from '../services/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 interface CollectionContextType {
   collections: Collection[];
@@ -17,22 +19,36 @@ const CollectionContext = createContext<CollectionContextType | undefined>(undef
 export const CollectionProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [collectionsLoading, setCollectionsLoading] = useState(true);
+  const hasLoaded = useRef(false);
 
   useEffect(() => {
     const loadCollections = async () => {
-        setCollectionsLoading(true);
-        try {
-            const collectionsData = await getData<{ [key: string]: Collection }>('collections');
-            const collectionsArray = collectionsData ? Object.values(collectionsData) : [];
-            setCollections(collectionsArray);
-        } catch (error) {
-            console.error("Failed to load collections:", error);
-            setCollections([]);
-        } finally {
-            setCollectionsLoading(false);
-        }
-    }
-    loadCollections();
+      setCollectionsLoading(true);
+      try {
+        const collectionsData = await getData<{ [key: string]: Collection }>('collections');
+        const collectionsArray = collectionsData ? Object.values(collectionsData) : [];
+        setCollections(collectionsArray);
+      } catch (error) {
+        console.error("Failed to load collections:", error);
+        setCollections([]);
+      } finally {
+        setCollectionsLoading(false);
+      }
+    };
+
+    // Wait for Firebase auth to be confirmed before fetching.
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser && !hasLoaded.current) {
+        hasLoaded.current = true;
+        loadCollections();
+      } else if (!firebaseUser) {
+        hasLoaded.current = false;
+        setCollections([]);
+        setCollectionsLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const addCollection = (collection: Collection) => {

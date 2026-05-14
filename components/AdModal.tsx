@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 interface AdModalProps {
@@ -52,6 +53,16 @@ const AdModal: React.FC<AdModalProps> = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      const t = setTimeout(() => { document.body.style.overflow = 'auto'; }, 300);
+      return () => clearTimeout(t);
+    }
+    return () => { document.body.style.overflow = 'auto'; };
+  }, [isOpen]);
+
   if (!isRendered) return null;
 
   const handleClose = () => {
@@ -59,8 +70,8 @@ const AdModal: React.FC<AdModalProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  return (
-    <div className={`fixed inset-0 bg-black z-50 flex justify-center items-center p-4 transition-opacity duration-300 ${isShowing ? 'bg-opacity-80' : 'bg-opacity-0 pointer-events-none'}`} aria-modal="true" role="dialog">
+  return createPortal(
+    <div className={`fixed top-0 left-0 w-screen h-screen bg-black z-[60] flex justify-center items-center p-4 transition-opacity duration-300 backdrop-blur-sm ${isShowing ? 'bg-opacity-80' : 'bg-opacity-0 pointer-events-none'}`} aria-modal="true" role="dialog">
         <div className={`bg-gray-900 rounded-lg shadow-xl w-full max-w-4xl transform transition-all duration-300 ease-out relative aspect-video flex flex-col items-center justify-center ${isShowing ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
             
             <div className="absolute top-2 right-2 z-20">
@@ -94,7 +105,8 @@ const AdModal: React.FC<AdModalProps> = ({ isOpen, onClose }) => {
               Advertisement
             </div>
         </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
